@@ -1,12 +1,19 @@
 require('dotenv').config();
 const express = require('express');
 const orderRoutes = require('./routes/orderRoutes');
+const authRoutes = require('./routes/authRoutes');
+const auth = require('./middleware/auth');
 
 const app = express();
 
 app.use(express.json());
 
-app.use('/order', orderRoutes);
+app.get('/', (req, res) => {
+  res.json({ status: 'ok', message: 'API de Pedidos rodando.' });
+});
+
+app.use('/auth', authRoutes);
+app.use('/order', auth, orderRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Rota não encontrada.' });
