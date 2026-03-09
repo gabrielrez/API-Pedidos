@@ -1,0 +1,32 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: api-pedidos-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: pedidos
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  app:
+    build: .
+    container_name: api-pedidos-app
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: pedidos
+      PORT: 3000
+    depends_on:
+      - db
+
+volumes:
+  db_data:
