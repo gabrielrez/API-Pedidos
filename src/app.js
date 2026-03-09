@@ -1,5 +1,7 @@
 require('dotenv').config();
 const express = require('express');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./docs/swagger');
 const orderRoutes = require('./routes/orderRoutes');
 const authRoutes = require('./routes/authRoutes');
 const auth = require('./middleware/auth');
@@ -7,6 +9,8 @@ const auth = require('./middleware/auth');
 const app = express();
 
 app.use(express.json());
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.get('/', (req, res) => {
   res.json({ status: 'ok', message: 'API de Pedidos rodando.' });
